@@ -19,7 +19,7 @@ import { INotificationModel } from '../../models/notificationsModel'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import Modal from '../../components/modal'
 
-export default function ListNotificationView() {
+export default function NotificationView() {
   const navigation = useNavigate()
   const [search, setSearch] = useState<string>('')
   const [tableData, setTableData] = useState<GridRowsProp[]>([])

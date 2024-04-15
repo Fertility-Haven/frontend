@@ -2,19 +2,19 @@ import { Box } from '@mui/material'
 import BreadCrumberStyle from '../../components/breadcrumb/Index'
 import { IconMenus } from '../../components/icon'
 
-export default function ListSelfCareView() {
+export default function ChatView() {
   return (
     <Box>
       <BreadCrumberStyle
         navigation={[
           {
-            label: 'Self Care',
-            link: '/self-care',
-            icon: <IconMenus.selfCare fontSize='small' />
+            label: 'Chats',
+            link: '/chats',
+            icon: <IconMenus.chat fontSize='small' />
           }
         ]}
       />
-      self care
+      chats
     </Box>
   )
 }

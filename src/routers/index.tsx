@@ -1,15 +1,15 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import AppLayout from '../layouts/AppLayout'
 import ErrorPage from '../pages/error-page'
-import LoginView from '../pages/auth/Login'
-import ProfileView from '../pages/profile/Index'
 import AuthLayout from '../layouts/AuthLayout'
 import { useToken } from '../hooks/token'
-import ListNotificationView from '../pages/notification/ListNotificationView'
-import EditProfileView from '../pages/profile/EditProfileView'
+import LoginView from '../pages/auth/Login'
+import ProfileView from '../pages/profile/profileView'
+import EditProfileView from '../pages/profile/editProfileView'
 import MyJourneyView from '../pages/myJourney/myJourneyView'
-import ListChatView from '../pages/chat/listChatView'
-import ListSelfCareView from '../pages/selfCare/listSelfCareView'
+import ChatView from '../pages/chat/chatView'
+import SelfCareView from '../pages/selfCare/selfCareView'
+import NotificationView from '../pages/notification/notificationView'
 
 export default function AppRouters() {
   const routers: { path: string; element: JSX.Element }[] = []
@@ -31,16 +31,16 @@ export default function AppRouters() {
     },
     {
       path: '/chats',
-      element: <ListChatView />
+      element: <ChatView />
     },
     {
       path: '/self-cares',
-      element: <ListSelfCareView />
+      element: <SelfCareView />
     },
 
     {
       path: '/notifications',
-      element: <ListNotificationView />
+      element: <NotificationView />
     },
     {
       path: '/my-profile',
