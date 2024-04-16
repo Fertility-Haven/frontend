@@ -11,13 +11,14 @@ import ChatView from '../pages/chat/chatView'
 import SelfCareView from '../pages/selfCare/selfCareView'
 import NotificationView from '../pages/notification/notificationView'
 import CoupleExerciseView from '../pages/myJourney/coupleExerciseView'
-import DailyMoodView from '../pages/myJourney/dailyMoodView'
 import MeditationView from '../pages/myJourney/meditationView'
 import ListDailyJournalView from '../pages/myJourney/dailyJournal/listDailyJournalView'
 import CreateDailyJournalView from '../pages/myJourney/dailyJournal/createDailyJournalView'
 import EditDailyJournalView from '../pages/myJourney/dailyJournal/editDailyJournalView'
 import DetailDailyJournalView from '../pages/myJourney/dailyJournal/detailDailyJournalView'
 import SignUpView from '../pages/auth/signUpView'
+import ListDailyMoodView from '../pages/myJourney/dailyMood/listDailyMoodView'
+import CreateDailyMoodView from '../pages/myJourney/dailyMood/createDailyMoodView'
 
 export default function AppRouters() {
   const routers: { path: string; element: JSX.Element }[] = []
@@ -46,9 +47,15 @@ export default function AppRouters() {
       path: '/my-journey/couple-exercises',
       element: <CoupleExerciseView />
     },
+
+    //daily mood routers
     {
       path: '/my-journey/daily-moods',
-      element: <DailyMoodView />
+      element: <ListDailyMoodView />
+    },
+    {
+      path: '/my-journey/daily-moods/create',
+      element: <CreateDailyMoodView />
     },
 
     //daily journal routes
