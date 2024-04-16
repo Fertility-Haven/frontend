@@ -19,13 +19,14 @@ import { IconMenus } from '../../../components/icon'
 import { useNavigate } from 'react-router-dom'
 import Modal from '../../../components/modal'
 import { convertTime } from '../../../utilities/convertTime'
+import { IDaylyJournalModel } from '../../../models/dailyJournalModel'
 
 export default function ListDailyJournalView() {
   const navigation = useNavigate()
   const [search, setSearch] = useState<string>('')
   const [tableData, setTableData] = useState<GridRowsProp[]>([])
   const { handleGetTableDataRequest, handleRemoveRequest } = useHttp()
-  const [modalDeleteData, setModalDeleteData] = useState<any>()
+  const [modalDeleteData, setModalDeleteData] = useState<IDaylyJournalModel>()
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
 
   const [paginationModel, setPaginationModel] = useState({
@@ -33,9 +34,9 @@ export default function ListDailyJournalView() {
     page: 0
   })
 
-  const handleDeleteCategory = async (categoryId: string) => {
+  const handleDelete = async (daylyJournalId: string) => {
     await handleRemoveRequest({
-      path: '/categories?categoryId=' + categoryId
+      path: '/daily-journals?dailyJournalId=' + daylyJournalId
     })
     window.location.reload()
   }
@@ -48,7 +49,7 @@ export default function ListDailyJournalView() {
   const getTableData = async () => {
     try {
       const result = await handleGetTableDataRequest({
-        path: '/categories',
+        path: '/daily-journals',
         page: paginationModel.page ?? 0,
         size: paginationModel.pageSize ?? 10,
         filter: { search }
@@ -68,7 +69,7 @@ export default function ListDailyJournalView() {
 
   const columns: GridColDef[] = [
     {
-      field: 'categoryName',
+      field: 'dailyJournalTitle',
       flex: 1,
       renderHeader: () => <strong>{'Title'}</strong>,
       editable: true
@@ -92,7 +93,7 @@ export default function ListDailyJournalView() {
             icon={<EditIcon />}
             label='Edit'
             className='textPrimary'
-            onClick={() => navigation('edit/' + row.categoryId)}
+            onClick={() => navigation('edit/' + row.daylyJournalId)}
             color='inherit'
           />,
           <GridActionsCellItem
@@ -177,10 +178,10 @@ export default function ListDailyJournalView() {
         openModal={openModalDelete}
         handleModalOnCancel={() => setOpenModalDelete(false)}
         message={
-          'Apakah anda yakin ingin menghapus kategori ' + modalDeleteData?.categoryName
+          'Apakah anda yakin ingin menghapus ' + modalDeleteData?.dailyJournalTitle
         }
         handleModal={() => {
-          handleDeleteCategory(modalDeleteData?.categoryId ?? '')
+          handleDelete(modalDeleteData?.dailyJournalId ?? '')
           setOpenModalDelete(!openModalDelete)
         }}
       />
