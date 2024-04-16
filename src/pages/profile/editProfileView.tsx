@@ -11,6 +11,7 @@ export default function EditProfileView() {
 
   const [user, setUser] = useState<IUserUpdateRequestModel>({
     userId: userId!,
+    userEmail: '',
     userName: '',
     userPassword: ''
   })
@@ -18,7 +19,7 @@ export default function EditProfileView() {
   const handleSubmit = async () => {
     try {
       await handleUpdateRequest({
-        path: '/my-profile',
+        path: '/users',
         body: user
       })
       navigate('/my-profile')
@@ -29,7 +30,7 @@ export default function EditProfileView() {
 
   const getMyProfile = async () => {
     const result = await handleGetRequest({
-      path: '/my-profile'
+      path: '/users/detail'
     })
     setUser(result)
   }
@@ -57,6 +58,19 @@ export default function EditProfileView() {
             justifyContent: 'center'
           }}
         >
+          <TextField
+            label='E-mail'
+            id='outlined-start-adornment'
+            sx={{ m: 1 }}
+            value={user?.userEmail}
+            type='text'
+            onChange={(e) => {
+              setUser({
+                ...user,
+                userEmail: e.target.value
+              })
+            }}
+          />
           <TextField
             label='User Name'
             id='outlined-start-adornment'

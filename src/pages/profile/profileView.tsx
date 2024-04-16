@@ -15,7 +15,7 @@ const ProfileView = () => {
 
   const getMyProfile = async () => {
     const result = await handleGetRequest({
-      path: '/my-profile'
+      path: '/users/detail'
     })
     setDetailProfile(result)
   }
@@ -64,11 +64,11 @@ const ProfileView = () => {
             </tr>
             <tr>
               <td>
-                <Typography fontWeight={'Bold'}>Role</Typography>
+                <Typography fontWeight={'Bold'}>E-mail</Typography>
               </td>
               <td>:</td>
               <td>
-                <Typography>{detailProfile?.userRole}</Typography>
+                <Typography>{detailProfile?.userEmail}</Typography>
               </td>
             </tr>
             <tr>
