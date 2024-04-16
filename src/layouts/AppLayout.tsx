@@ -116,8 +116,7 @@ export default function AppLayout() {
   const menuItems = [
     { title: 'Home', link: '/', icon: <IconMenus.home /> },
     { title: 'My Journey', link: '/my-journey', icon: <IconMenus.myJourney /> },
-    // { title: 'Self Care', link: '/self-cares', icon: <IconMenus.selfCare /> },
-    { title: 'Virtual Therapy', link: '/chats', icon: <IconMenus.therapy /> },
+    { title: 'Virtual Therapy', link: '/virtual-therapy', icon: <IconMenus.therapy /> },
     { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> },
     { title: 'My Profile', link: '/my-profile', icon: <IconMenus.profile /> }
   ]

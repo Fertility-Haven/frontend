@@ -7,7 +7,6 @@ import LoginView from '../pages/auth/loginView'
 import ProfileView from '../pages/profile/profileView'
 import EditProfileView from '../pages/profile/editProfileView'
 import MyJourneyView from '../pages/myJourney/myJourneyView'
-import ChatView from '../pages/chat/chatView'
 import SelfCareView from '../pages/selfCare/selfCareView'
 import NotificationView from '../pages/notification/notificationView'
 import CoupleExerciseView from '../pages/myJourney/coupleExercise/coupleExerciseView'
@@ -20,6 +19,7 @@ import SignUpView from '../pages/auth/signUpView'
 import ListDailyMoodView from '../pages/myJourney/dailyMood/listDailyMoodView'
 import CreateDailyMoodView from '../pages/myJourney/dailyMood/createDailyMoodView'
 import HomeView from '../pages/home/homeView'
+import ListVirtualTherapyView from '../pages/virtualTherapy/listVirtualTherapyView'
 
 export default function AppRouters() {
   const routers: { path: string; element: JSX.Element }[] = []
@@ -87,8 +87,8 @@ export default function AppRouters() {
       element: <MeditationView />
     },
     {
-      path: '/chats',
-      element: <ChatView />
+      path: '/virtual-therapy',
+      element: <ListVirtualTherapyView />
     },
     {
       path: '/self-cares',

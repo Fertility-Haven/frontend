@@ -73,6 +73,15 @@ const ProfileView = () => {
             </tr>
             <tr>
               <td>
+                <Typography fontWeight={'Bold'}>Register As</Typography>
+              </td>
+              <td>:</td>
+              <td>
+                <Typography>{detailProfile?.userRole}</Typography>
+              </td>
+            </tr>
+            <tr>
+              <td>
                 <Typography fontWeight={'Bold'}>Dibuat Pada</Typography>
               </td>
               <td>:</td>

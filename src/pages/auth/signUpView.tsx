@@ -1,7 +1,21 @@
 import { useState } from 'react'
-import { Button, Card, Typography, Container, Stack, Box, TextField } from '@mui/material'
+import {
+  Button,
+  Card,
+  Typography,
+  Container,
+  Stack,
+  Box,
+  TextField,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup
+} from '@mui/material'
 import { Link, useNavigate } from 'react-router-dom'
 import { useHttp } from '../../hooks/http'
+import { IUserCreateRequestModel } from '../../models/userModel'
 
 export default function SignUpView() {
   const { handlePostRequest } = useHttp()
@@ -10,18 +24,19 @@ export default function SignUpView() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [userName, setUserName] = useState('')
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const [userRole, setUserRole] = useState('')
 
   const handleSubmit = async () => {
     try {
+      const payload: IUserCreateRequestModel = {
+        userName: userName,
+        userEmail: email,
+        userPassword: password,
+        userRole
+      }
       await handlePostRequest({
         path: '/users/register',
-        body: {
-          userName: userName,
-          userEmail: email,
-          userPassword: password,
-          userPhoneNumber: phoneNumber
-        }
+        body: payload
       })
       navigate('/')
     } catch (error: unknown) {
@@ -54,21 +69,15 @@ export default function SignUpView() {
             }}
           >
             <TextField
-              // error={isError}
-              // helperText={errorMessagePassword}
               label='User Name'
               id='outlined-start-adornment'
               sx={{ m: 1, width: '36ch' }}
               value={userName}
               onChange={(e) => {
                 setUserName(e.target.value)
-                // setIsError(false)
-                // setErrorMessagePassword('')
               }}
             />
             <TextField
-              // error={isError}
-              // helperText={errorMessageEmail}
               label='E-mail'
               id='outlined-start-adornment'
               sx={{ m: 1, width: '36ch' }}
@@ -76,14 +85,10 @@ export default function SignUpView() {
               type='email'
               onChange={(e) => {
                 setEmail(e.target.value)
-                // setIsError(false)
-                // setErrorMessageEmail('')
               }}
             />
 
             <TextField
-              // error={isError}
-              // helperText={errorMessagePassword}
               label='Password'
               id='outlined-start-adornment'
               sx={{ m: 1, width: '36ch' }}
@@ -91,24 +96,29 @@ export default function SignUpView() {
               type='password'
               onChange={(e) => {
                 setPassword(e.target.value)
-                // setIsError(false)
-                // setErrorMessagePassword('')
               }}
             />
 
-            <TextField
-              // error={isError}
-              // helperText={errorMessagePassword}
-              label='Phone'
-              id='outlined-start-adornment'
-              sx={{ m: 1, width: '36ch' }}
-              value={phoneNumber}
-              onChange={(e) => {
-                setPhoneNumber(e.target.value)
-                // setIsError(false)
-                // setErrorMessagePassword('')
-              }}
-            />
+            <FormControl sx={{ m: 1, width: '36ch' }}>
+              <FormLabel id='demo-radio-buttons-group-label'>register as</FormLabel>
+
+              <RadioGroup
+                aria-labelledby='demo-radio-buttons-group-label'
+                defaultValue='female'
+                name='radio-buttons-group'
+              >
+                <Stack direction={'row'} flexWrap={'wrap'} spacing={2}>
+                  {['patient', 'therapist'].map((mood) => (
+                    <FormControlLabel
+                      key={mood}
+                      value={mood}
+                      control={<Radio onChange={(e) => setUserRole(e.target.value)} />}
+                      label={mood}
+                    />
+                  ))}
+                </Stack>
+              </RadioGroup>
+            </FormControl>
 
             <Button
               sx={{
