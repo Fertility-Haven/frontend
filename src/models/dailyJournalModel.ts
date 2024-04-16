@@ -1,18 +1,18 @@
 import { IRootModel } from './rootModel'
 
-export interface IDaylyJournalModel extends IRootModel {
+export interface IDailyJournalModel extends IRootModel {
   dailyJournalId: string
   dailyJournalUserId: string
   dailyJournalTitle: string
   dailyJournalDescription: string
 }
 
-export interface IDaylyJournaCreateRequestModel {
+export interface IDailyJournaCreateRequestModel {
   dailyJournalTitle: string
   dailyJournalDescription: string
 }
 
-export interface IDaylyJournalUpdateRequestModel {
+export interface IDailyJournalUpdateRequestModel {
   dailyJournalId: string
   dailyJournalTitle?: string
   dailyJournalDescription?: string

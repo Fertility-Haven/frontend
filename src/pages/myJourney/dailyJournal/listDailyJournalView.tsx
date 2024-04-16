@@ -19,14 +19,14 @@ import { IconMenus } from '../../../components/icon'
 import { useNavigate } from 'react-router-dom'
 import Modal from '../../../components/modal'
 import { convertTime } from '../../../utilities/convertTime'
-import { IDaylyJournalModel } from '../../../models/dailyJournalModel'
+import { IDailyJournalModel } from '../../../models/dailyJournalModel'
+import { MoreOutlined } from '@mui/icons-material'
 
 export default function ListDailyJournalView() {
   const navigation = useNavigate()
-  const [search, setSearch] = useState<string>('')
   const [tableData, setTableData] = useState<GridRowsProp[]>([])
   const { handleGetTableDataRequest, handleRemoveRequest } = useHttp()
-  const [modalDeleteData, setModalDeleteData] = useState<IDaylyJournalModel>()
+  const [modalDeleteData, setModalDeleteData] = useState<IDailyJournalModel>()
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
 
   const [paginationModel, setPaginationModel] = useState({
@@ -46,7 +46,7 @@ export default function ListDailyJournalView() {
     setOpenModalDelete(!openModalDelete)
   }
 
-  const getTableData = async () => {
+  const getTableData = async ({ search }: { search: string }) => {
     try {
       const result = await handleGetTableDataRequest({
         path: '/daily-journals',
@@ -64,7 +64,7 @@ export default function ListDailyJournalView() {
   }
 
   useEffect(() => {
-    getTableData()
+    getTableData({ search: '' })
   }, [paginationModel])
 
   const columns: GridColDef[] = [
@@ -93,13 +93,19 @@ export default function ListDailyJournalView() {
             icon={<EditIcon />}
             label='Edit'
             className='textPrimary'
-            onClick={() => navigation('edit/' + row.daylyJournalId)}
+            onClick={() => navigation('edit/' + row.dailyJournalId)}
             color='inherit'
           />,
           <GridActionsCellItem
             icon={<DeleteIcon color='error' />}
             label='Delete'
             onClick={() => handleOpenModalDelete(row)}
+            color='inherit'
+          />,
+          <GridActionsCellItem
+            icon={<MoreOutlined color='info' />}
+            label='Detail'
+            onClick={() => navigation('detail/' + row.dailyJournalId)}
             color='inherit'
           />
         ]
@@ -108,6 +114,7 @@ export default function ListDailyJournalView() {
   ]
 
   function CustomToolbar() {
+    const [search, setSearch] = useState<string>('')
     return (
       <GridToolbarContainer sx={{ justifyContent: 'space-between', mb: 2 }}>
         <Stack direction='row' spacing={2}>
@@ -120,11 +127,17 @@ export default function ListDailyJournalView() {
             Create Journal
           </Button>
         </Stack>
-        <TextField
-          size='small'
-          placeholder='search...'
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <Stack direction={'row'} spacing={1} alignItems={'center'}>
+          <TextField
+            size='small'
+            placeholder='search...'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button variant='outlined' onClick={() => getTableData({ search })}>
+            Search
+          </Button>
+        </Stack>
       </GridToolbarContainer>
     )
   }

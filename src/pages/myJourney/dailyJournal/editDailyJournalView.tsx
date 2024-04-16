@@ -1,32 +1,53 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Card, Typography, Box, TextField, Stack } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useHttp } from '../../../hooks/http'
-import { IDailyJournaCreateRequestModel } from '../../../models/dailyJournalModel'
+import {
+  IDailyJournalModel,
+  IDailyJournalUpdateRequestModel
+} from '../../../models/dailyJournalModel'
 import BreadCrumberStyle from '../../../components/breadcrumb/Index'
 import { IconMenus } from '../../../components/icon'
 
-export default function CreateDailyJournalView() {
-  const { handlePostRequest } = useHttp()
+export default function EditDailyJournalView() {
+  const { handleUpdateRequest, handleGetRequest } = useHttp()
   const navigate = useNavigate()
+  const { dailyJournalId } = useParams()
 
-  const [daylyJournalPayload, setDaylyJournalPayload] =
-    useState<IDailyJournaCreateRequestModel>({
-      dailyJournalTitle: '',
-      dailyJournalDescription: ''
-    })
+  const [dailyJournal, setDailyJournal] = useState<IDailyJournalUpdateRequestModel>({
+    dailyJournalId: '',
+    dailyJournalTitle: '',
+    dailyJournalDescription: ''
+  })
 
   const handleSubmit = async () => {
     try {
-      await handlePostRequest({
+      const payload: IDailyJournalUpdateRequestModel = {
+        ...dailyJournal,
+        dailyJournalId: dailyJournalId ?? ''
+      }
+      await handleUpdateRequest({
         path: '/daily-journals',
-        body: daylyJournalPayload
+        body: payload
       })
       navigate('/my-journey/daily-journals')
     } catch (error: unknown) {
       console.log(error)
     }
   }
+
+  const getDetailDailyJournal = async () => {
+    const result: IDailyJournalModel = await handleGetRequest({
+      path: '/daily-journals/detail/' + dailyJournalId
+    })
+    if (result !== null) {
+      setDailyJournal(result)
+    }
+  }
+
+  useEffect(() => {
+    getDetailDailyJournal()
+  }, [])
 
   return (
     <>
@@ -43,8 +64,8 @@ export default function CreateDailyJournalView() {
             icon: <IconMenus.dailyJournal fontSize='small' />
           },
           {
-            label: 'Create',
-            link: '/my-journey/daily-journals/create'
+            label: 'Edit',
+            link: '/my-journey/daily-journals/edit/' + dailyJournalId
           }
         ]}
       />
@@ -55,7 +76,7 @@ export default function CreateDailyJournalView() {
         }}
       >
         <Typography variant='h4' marginBottom={5} color='primary' fontWeight={'bold'}>
-          Create Daily Journal
+          Edit Daily Journal
         </Typography>
         <Box
           component='form'
@@ -69,11 +90,11 @@ export default function CreateDailyJournalView() {
             label='Title'
             id='outlined-start-adornment'
             sx={{ m: 1 }}
-            value={daylyJournalPayload?.dailyJournalTitle}
+            value={dailyJournal?.dailyJournalTitle}
             type='text'
             onChange={(e) => {
-              setDaylyJournalPayload({
-                ...daylyJournalPayload,
+              setDailyJournal({
+                ...dailyJournal,
                 dailyJournalTitle: e.target.value
               })
             }}
@@ -83,11 +104,11 @@ export default function CreateDailyJournalView() {
             label='Description'
             id='outlined-start-adornment'
             sx={{ m: 1 }}
-            value={daylyJournalPayload?.dailyJournalDescription}
+            value={dailyJournal?.dailyJournalDescription}
             type='text'
             onChange={(e) => {
-              setDaylyJournalPayload({
-                ...daylyJournalPayload,
+              setDailyJournal({
+                ...dailyJournal,
                 dailyJournalDescription: e.target.value
               })
             }}
@@ -105,7 +126,7 @@ export default function CreateDailyJournalView() {
               variant={'contained'}
               onClick={handleSubmit}
             >
-              Submit
+              Update
             </Button>
           </Stack>
         </Box>

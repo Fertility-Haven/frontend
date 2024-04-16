@@ -3,7 +3,7 @@ import AppLayout from '../layouts/AppLayout'
 import ErrorPage from '../pages/error-page'
 import AuthLayout from '../layouts/AuthLayout'
 import { useToken } from '../hooks/token'
-import LoginView from '../pages/auth/Login'
+import LoginView from '../pages/auth/loginView'
 import ProfileView from '../pages/profile/profileView'
 import EditProfileView from '../pages/profile/editProfileView'
 import MyJourneyView from '../pages/myJourney/myJourneyView'
@@ -15,6 +15,9 @@ import DailyMoodView from '../pages/myJourney/dailyMoodView'
 import MeditationView from '../pages/myJourney/meditationView'
 import ListDailyJournalView from '../pages/myJourney/dailyJournal/listDailyJournalView'
 import CreateDailyJournalView from '../pages/myJourney/dailyJournal/createDailyJournalView'
+import EditDailyJournalView from '../pages/myJourney/dailyJournal/editDailyJournalView'
+import DetailDailyJournalView from '../pages/myJourney/dailyJournal/detailDailyJournalView'
+import SignUpView from '../pages/auth/signUpView'
 
 export default function AppRouters() {
   const routers: { path: string; element: JSX.Element }[] = []
@@ -26,6 +29,10 @@ export default function AppRouters() {
     {
       path: '/login',
       element: <LoginView />
+    },
+    {
+      path: '/sign-up',
+      element: <SignUpView />
     }
   ]
 
@@ -43,6 +50,8 @@ export default function AppRouters() {
       path: '/my-journey/daily-moods',
       element: <DailyMoodView />
     },
+
+    //daily journal routes
     {
       path: '/my-journey/daily-journals',
       element: <ListDailyJournalView />
@@ -51,6 +60,16 @@ export default function AppRouters() {
       path: '/my-journey/daily-journals/create',
       element: <CreateDailyJournalView />
     },
+    {
+      path: '/my-journey/daily-journals/edit/:dailyJournalId',
+      element: <EditDailyJournalView />
+    },
+    {
+      path: '/my-journey/daily-journals/detail/:dailyJournalId',
+      element: <DetailDailyJournalView />
+    },
+
+    //meditaion routes
     {
       path: '/my-journey/meditations',
       element: <MeditationView />
