@@ -115,9 +115,11 @@ export default function AppLayout() {
   const navigate = useNavigate()
 
   const menuItems = [
-    { title: 'My Journey', link: '/', icon: <IconMenus.myJourney /> },
-    { title: 'Self Care', link: '/self-cares', icon: <IconMenus.selfCare /> },
+    { title: 'Home', link: '/', icon: <IconMenus.home /> },
+    { title: 'My Journey', link: '/my-journey', icon: <IconMenus.myJourney /> },
+    // { title: 'Self Care', link: '/self-cares', icon: <IconMenus.selfCare /> },
     { title: 'Chat', link: '/chats', icon: <IconMenus.chat /> },
+    { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> },
     { title: 'My Profile', link: '/my-profile', icon: <IconMenus.profile /> }
   ]
 

@@ -19,9 +19,9 @@ export default function MyJourneyView() {
       />
 
       <Grid container spacing={3}>
-        <Grid item md={4} sm={6} xs={12}>
+        <Grid item md={6} sm={6} xs={12}>
           <Card
-            sx={{ p: 3, minWidth: 200 }}
+            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
             onClick={() => navigation('/my-journey/daily-moods')}
           >
             <Stack direction='row' spacing={2}>
@@ -34,9 +34,9 @@ export default function MyJourneyView() {
             </Stack>
           </Card>
         </Grid>
-        <Grid item md={4} sm={6} xs={12}>
+        <Grid item md={6} sm={6} xs={12}>
           <Card
-            sx={{ p: 3, minWidth: 200 }}
+            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
             onClick={() => navigation('/my-journey/daily-journals')}
           >
             <Stack direction='row' spacing={2}>
@@ -49,9 +49,9 @@ export default function MyJourneyView() {
             </Stack>
           </Card>
         </Grid>
-        <Grid item md={4} sm={6} xs={12}>
+        <Grid item md={6} sm={6} xs={12}>
           <Card
-            sx={{ p: 3, minWidth: 200 }}
+            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
             onClick={() => navigation('/my-journey/meditations')}
           >
             <Stack direction='row' spacing={2}>
@@ -64,9 +64,9 @@ export default function MyJourneyView() {
             </Stack>
           </Card>
         </Grid>
-        <Grid item md={4} sm={6} xs={12}>
+        {/* <Grid item md={6} sm={6} xs={12}>
           <Card
-            sx={{ p: 3, minWidth: 200 }}
+            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
             onClick={() => navigation('/my-journey/couple-exercises')}
           >
             <Stack direction='row' spacing={2}>
@@ -78,7 +78,7 @@ export default function MyJourneyView() {
               </Stack>
             </Stack>
           </Card>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   )

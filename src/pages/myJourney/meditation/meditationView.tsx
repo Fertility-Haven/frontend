@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
-import BreadCrumberStyle from '../../components/breadcrumb/Index'
-import { IconMenus } from '../../components/icon'
+import BreadCrumberStyle from '../../../components/breadcrumb/Index'
+import { IconMenus } from '../../../components/icon'
 
 export default function MeditationView() {
   return (

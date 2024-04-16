@@ -13,9 +13,11 @@ import PodcastsIcon from '@mui/icons-material/Podcasts'
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 import ChurchIcon from '@mui/icons-material/Church'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
+import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined'
 
 export const IconMenus = {
   logo: SpaOutlinedIcon,
+  home: SpaceDashboardOutlinedIcon,
   myJourney: InsertChartOutlinedIcon,
   chat: ChatOutlinedIcon,
   notification: NotificationsActiveOutlinedIcon,

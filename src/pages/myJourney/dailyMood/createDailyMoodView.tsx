@@ -64,7 +64,7 @@ export default function CreateDailyMoodView() {
         }}
       >
         <Typography variant='h4' marginBottom={5} color='primary' fontWeight={'bold'}>
-          Create Daily Mood
+          Create Your Daily Mood
         </Typography>
         <Box
           component='form'

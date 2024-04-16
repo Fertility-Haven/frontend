@@ -5,23 +5,28 @@ import { useHttp } from '../../../hooks/http'
 import { IDailyJournaCreateRequestModel } from '../../../models/dailyJournalModel'
 import BreadCrumberStyle from '../../../components/breadcrumb/Index'
 import { IconMenus } from '../../../components/icon'
+import { useQuill } from 'react-quilljs'
+import 'quill/dist/quill.snow.css'
 
 export default function CreateDailyJournalView() {
   const { handlePostRequest } = useHttp()
   const navigate = useNavigate()
+  const { quill, quillRef } = useQuill()
 
-  const [daylyJournalPayload, setDaylyJournalPayload] =
-    useState<IDailyJournaCreateRequestModel>({
-      dailyJournalTitle: '',
-      dailyJournalDescription: ''
-    })
+  const [dailyJournalTitle, setDailyJournalTitle] = useState('')
 
   const handleSubmit = async () => {
     try {
+      const payload: IDailyJournaCreateRequestModel = {
+        dailyJournalTitle,
+        dailyJournalDescription: quill.root.innerHTML
+      }
+
       await handlePostRequest({
         path: '/daily-journals',
-        body: daylyJournalPayload
+        body: payload
       })
+
       navigate('/my-journey/daily-journals')
     } catch (error: unknown) {
       console.log(error)
@@ -68,30 +73,17 @@ export default function CreateDailyJournalView() {
           <TextField
             label='Title'
             id='outlined-start-adornment'
-            sx={{ m: 1 }}
-            value={daylyJournalPayload?.dailyJournalTitle}
+            sx={{ marginBottom: 2 }}
+            value={dailyJournalTitle}
             type='text'
             onChange={(e) => {
-              setDaylyJournalPayload({
-                ...daylyJournalPayload,
-                dailyJournalTitle: e.target.value
-              })
+              setDailyJournalTitle(e.target.value)
             }}
           />
 
-          <TextField
-            label='Description'
-            id='outlined-start-adornment'
-            sx={{ m: 1 }}
-            value={daylyJournalPayload?.dailyJournalDescription}
-            type='text'
-            onChange={(e) => {
-              setDaylyJournalPayload({
-                ...daylyJournalPayload,
-                dailyJournalDescription: e.target.value
-              })
-            }}
-          />
+          <div style={{ minHeight: '200px' }}>
+            <div ref={quillRef} />
+          </div>
 
           <Stack direction={'row'} justifyContent='flex-end'>
             <Button

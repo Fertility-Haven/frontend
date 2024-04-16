@@ -109,7 +109,7 @@ export default function ListDailyMoodView() {
             startIcon={<Add />}
             variant='outlined'
           >
-            Create Daily Mood
+            Create Your Daily Mood
           </Button>
         </Stack>
         <Stack direction={'row'} spacing={1} alignItems={'center'}>

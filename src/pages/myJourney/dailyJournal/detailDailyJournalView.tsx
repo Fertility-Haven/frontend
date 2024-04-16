@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams } from 'react-router-dom'
 import { useHttp } from '../../../hooks/http'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Card, Typography } from '@mui/material'
 import { convertTime } from '../../../utilities/convertTime'
 import { IDailyJournalModel } from '../../../models/dailyJournalModel'
@@ -10,6 +11,7 @@ import { IconMenus } from '../../../components/icon'
 export default function DetailDailyJournalView() {
   const { handleGetRequest } = useHttp()
   const { dailyJournalId } = useParams()
+  const textRef: any = useRef()
 
   const [detailDailyJournal, setDetailDailyJournal] = useState<IDailyJournalModel>()
 
@@ -19,6 +21,10 @@ export default function DetailDailyJournalView() {
     })
     if (result) {
       setDetailDailyJournal(result)
+
+      if (textRef) {
+        textRef.current.innerHTML = result?.dailyJournalDescription
+      }
     }
   }
 
@@ -70,7 +76,7 @@ export default function DetailDailyJournalView() {
               </td>
               <td>:</td>
               <td>
-                <Typography>{detailDailyJournal?.dailyJournalDescription}</Typography>
+                <div ref={textRef}></div>
               </td>
             </tr>
             <tr>

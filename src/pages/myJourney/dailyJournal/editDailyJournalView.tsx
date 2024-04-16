@@ -8,11 +8,14 @@ import {
 } from '../../../models/dailyJournalModel'
 import BreadCrumberStyle from '../../../components/breadcrumb/Index'
 import { IconMenus } from '../../../components/icon'
+import { useQuill } from 'react-quilljs'
+import 'quill/dist/quill.snow.css'
 
 export default function EditDailyJournalView() {
   const { handleUpdateRequest, handleGetRequest } = useHttp()
   const navigate = useNavigate()
   const { dailyJournalId } = useParams()
+  const { quill, quillRef } = useQuill()
 
   const [dailyJournal, setDailyJournal] = useState<IDailyJournalUpdateRequestModel>({
     dailyJournalId: '',
@@ -24,6 +27,7 @@ export default function EditDailyJournalView() {
     try {
       const payload: IDailyJournalUpdateRequestModel = {
         ...dailyJournal,
+        dailyJournalDescription: quill.root.innerHTML,
         dailyJournalId: dailyJournalId ?? ''
       }
       await handleUpdateRequest({
@@ -42,12 +46,15 @@ export default function EditDailyJournalView() {
     })
     if (result !== null) {
       setDailyJournal(result)
+      if (quill) {
+        quill.root.innerHTML = result.dailyJournalDescription
+      }
     }
   }
 
   useEffect(() => {
     getDetailDailyJournal()
-  }, [])
+  }, [quill])
 
   return (
     <>
@@ -89,8 +96,8 @@ export default function EditDailyJournalView() {
           <TextField
             label='Title'
             id='outlined-start-adornment'
-            sx={{ m: 1 }}
             value={dailyJournal?.dailyJournalTitle}
+            sx={{ marginBottom: 3 }}
             type='text'
             onChange={(e) => {
               setDailyJournal({
@@ -100,19 +107,9 @@ export default function EditDailyJournalView() {
             }}
           />
 
-          <TextField
-            label='Description'
-            id='outlined-start-adornment'
-            sx={{ m: 1 }}
-            value={dailyJournal?.dailyJournalDescription}
-            type='text'
-            onChange={(e) => {
-              setDailyJournal({
-                ...dailyJournal,
-                dailyJournalDescription: e.target.value
-              })
-            }}
-          />
+          <div style={{ minHeight: '200px' }}>
+            <div ref={quillRef} />
+          </div>
 
           <Stack direction={'row'} justifyContent='flex-end'>
             <Button
