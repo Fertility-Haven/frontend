@@ -2,12 +2,26 @@ import { Card, Grid, Box, Stack, Typography } from '@mui/material'
 import ReactApexChart from 'react-apexcharts'
 import BreadCrumberStyle from '../../components/breadcrumb/Index'
 import { IconMenus } from '../../components/icon'
-// import { useEffect, useState } from 'react'
-// // import { IStatisticTotalModel } from '../../models/statisticModel'
-// import { useHttp } from '../../hooks/http'
+import { useHttp } from '../../hooks/http'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function HomeView() {
-  //   const { handleGetRequest } = useHttp()
+  const { handleGetRequest } = useHttp()
+  const [quote, setQuote] = useState('')
+  const navigation = useNavigate()
+
+  const getQuotes = async () => {
+    const result = await handleGetRequest({
+      path: '/quotes'
+    })
+
+    if (result) {
+      const randomIndex = Math.floor(Math.random() * 10)
+      setQuote(result.items[randomIndex ?? 0]?.quotesText)
+    }
+  }
+
   //   const [statisticTotal, setStatisticTotal] = useState<IStatisticTotalModel>()
 
   //   const getStatistic = async () => {
@@ -18,9 +32,10 @@ export default function HomeView() {
   //     setStatisticTotal(result)
   //   }
 
-  //   useEffect(() => {
-  //     getStatistic()
-  //   }, [])
+  useEffect(() => {
+    getQuotes()
+  }, [])
+
   return (
     <Box>
       <BreadCrumberStyle
@@ -33,26 +48,60 @@ export default function HomeView() {
         ]}
       />
 
-      <Grid container spacing={3} mb={3}>
-        <Grid item sm={6} xs={12}>
-          <Card sx={{ p: 3, minWidth: 200 }}>
-            <Stack direction='row' spacing={2}>
-              <IconMenus.inspirationQuote fontSize='large' color={'inherit'} />
-              <Stack justifyContent='center'>
-                <Typography fontSize='large' fontWeight='bold'>
-                  Inspirational Quotes Today
-                </Typography>
-              </Stack>
-            </Stack>
-          </Card>
-        </Grid>
-        <Grid item md={6} sm={6} xs={12}>
-          <Card sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}>
+      <Card sx={{ p: 3, minWidth: 200, marginBottom: 2 }}>
+        <Stack direction='row' spacing={2}>
+          <IconMenus.inspirationQuote fontSize='large' color={'inherit'} />
+          <Stack justifyContent='center'>
+            <Typography fontSize='large' fontWeight='bold'>
+              quotes for today "{quote}"
+            </Typography>
+          </Stack>
+        </Stack>
+      </Card>
+
+      <Grid container spacing={2} mb={2}>
+        <Grid item sm={4} xs={12}>
+          <Card
+            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
+            onClick={() => navigation('/my-journey/daily-moods')}
+          >
             <Stack direction='row' spacing={2}>
               <IconMenus.dailyMood fontSize='large' color={'inherit'} />
               <Stack justifyContent='center'>
                 <Typography fontSize='large' fontWeight='bold'>
                   Your Previous Mood Is Sad
+                </Typography>
+              </Stack>
+            </Stack>
+          </Card>
+        </Grid>
+
+        <Grid item sm={4} xs={12}>
+          <Card
+            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
+            onClick={() => navigation('/my-journey/daily-journals')}
+          >
+            <Stack direction='row' spacing={2}>
+              <IconMenus.dailyJournal fontSize='large' color={'inherit'} />
+              <Stack justifyContent='center'>
+                <Typography fontSize='large' fontWeight='bold'>
+                  {30} Daily Journal
+                </Typography>
+              </Stack>
+            </Stack>
+          </Card>
+        </Grid>
+
+        <Grid item sm={4} xs={12}>
+          <Card
+            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
+            onClick={() => navigation('/notifications')}
+          >
+            <Stack direction='row' spacing={2}>
+              <IconMenus.notification fontSize='large' color={'inherit'} />
+              <Stack justifyContent='center'>
+                <Typography fontSize='large' fontWeight='bold'>
+                  {30} Notifications
                 </Typography>
               </Stack>
             </Stack>

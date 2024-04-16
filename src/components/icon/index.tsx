@@ -14,9 +14,10 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
 import ChurchIcon from '@mui/icons-material/Church'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
 import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined'
+import SpaIcon from '@mui/icons-material/Spa'
 
 export const IconMenus = {
-  logo: SpaOutlinedIcon,
+  logo: SpaIcon,
   home: SpaceDashboardOutlinedIcon,
   myJourney: InsertChartOutlinedIcon,
   chat: ChatOutlinedIcon,
@@ -33,5 +34,6 @@ export const IconMenus = {
   inspirationQuote: FormatQuoteIcon,
   prayer: ChurchIcon,
   community: Diversity3Icon,
-  yoga: SelfImprovementOutlinedIcon
+  yoga: SelfImprovementOutlinedIcon,
+  therapy: SpaOutlinedIcon
 }

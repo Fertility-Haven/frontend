@@ -35,7 +35,6 @@ import {
 import { useAppContext } from '../context/app.context'
 import { IconMenus } from '../components/icon'
 import { useToken } from '../hooks/token'
-import SpaOutlinedIcon from '@mui/icons-material/SpaOutlined'
 
 const drawerWidth = 240
 
@@ -118,7 +117,7 @@ export default function AppLayout() {
     { title: 'Home', link: '/', icon: <IconMenus.home /> },
     { title: 'My Journey', link: '/my-journey', icon: <IconMenus.myJourney /> },
     // { title: 'Self Care', link: '/self-cares', icon: <IconMenus.selfCare /> },
-    { title: 'Chat', link: '/chats', icon: <IconMenus.chat /> },
+    { title: 'Virtual Therapy', link: '/chats', icon: <IconMenus.therapy /> },
     { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> },
     { title: 'My Profile', link: '/my-profile', icon: <IconMenus.profile /> }
   ]
@@ -156,7 +155,7 @@ export default function AppLayout() {
             >
               <MenuIcon />
             </IconButton>
-            <SpaOutlinedIcon />
+            <IconMenus.logo />
             <Typography
               variant='h6'
               noWrap
