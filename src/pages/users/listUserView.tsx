@@ -1,31 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Box from '@mui/material/Box'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import {
   GridRowsProp,
   DataGrid,
   GridColDef,
   GridActionsCellItem,
-  GridToolbarContainer
+  GridToolbarContainer,
+  GridToolbarExport
 } from '@mui/x-data-grid'
-import { Add } from '@mui/icons-material'
+import { Add, MoreOutlined } from '@mui/icons-material'
 import { useEffect, useState } from 'react'
 import { useHttp } from '../../hooks/http'
 import { Button, Stack, TextField } from '@mui/material'
 import BreadCrumberStyle from '../../components/breadcrumb/Index'
 import { IconMenus } from '../../components/icon'
 import { useNavigate } from 'react-router-dom'
-import { convertTime } from '../../utilities/convertTime'
-import { INotificationModel } from '../../models/notificationsModel'
-import DeleteIcon from '@mui/icons-material/DeleteOutlined'
-import Modal from '../../components/modal'
+import ModalStyle from '../../components/modal'
+import { IUserModel } from '../../models/userModel'
 
-export default function ListNotificationView() {
-  const navigation = useNavigate()
-  const [search, setSearch] = useState<string>('')
+export default function ListUserView() {
   const [tableData, setTableData] = useState<GridRowsProp[]>([])
   const { handleGetTableDataRequest, handleRemoveRequest } = useHttp()
-
-  const [modalDeleteData, setModalDeleteData] = useState<INotificationModel>()
+  const navigation = useNavigate()
+  const [modalDeleteData, setModalDeleteData] = useState<IUserModel>()
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
 
   const [paginationModel, setPaginationModel] = useState({
@@ -33,28 +32,16 @@ export default function ListNotificationView() {
     page: 0
   })
 
-  const handleDeleteNotification = async (notificationId: string) => {
-    await handleRemoveRequest({
-      path: '/notifications?notificationId=' + notificationId
-    })
-    window.location.reload()
-  }
-
-  const handleOpenModalDelete = (data: INotificationModel) => {
-    setModalDeleteData(data)
-    setOpenModalDelete(!openModalDelete)
-  }
-
-  const getTableData = async () => {
+  const getTableData = async ({ search }: { search: string }) => {
     try {
       const result = await handleGetTableDataRequest({
-        path: '/notifications',
+        path: '/users',
         page: paginationModel.page ?? 0,
         size: paginationModel.pageSize ?? 10,
         filter: { search }
       })
+
       if (result) {
-        console.log(result)
         setTableData(result.items)
       }
     } catch (error: any) {
@@ -62,29 +49,41 @@ export default function ListNotificationView() {
     }
   }
 
+  const handleDeleteAdmin = async (userId: string) => {
+    await handleRemoveRequest({
+      path: '/users?userId=' + userId
+    })
+    window.location.reload()
+  }
+
+  const handleOpenModalDelete = (data: IUserModel) => {
+    setModalDeleteData(data)
+    setOpenModalDelete(!openModalDelete)
+  }
+
   useEffect(() => {
-    getTableData()
+    getTableData({ search: '' })
   }, [paginationModel])
 
   const columns: GridColDef[] = [
     {
-      field: 'notificationName',
+      field: 'userName',
       flex: 1,
-      renderHeader: () => <strong>{'Nama'}</strong>,
+      renderHeader: () => <strong>{'NAMA'}</strong>,
       editable: true
     },
     {
-      field: 'notificationMessage',
+      field: 'userRole',
+      renderHeader: () => <strong>{'Role'}</strong>,
       flex: 1,
-      renderHeader: () => <strong>{'Pesan'}</strong>,
-      editable: true
+      editable: true,
+      type: 'singleSelect',
+      valueOptions: ['patient', 'therapist', 'admin']
     },
     {
       field: 'createdAt',
-      flex: 1,
-      renderHeader: () => <strong>{'Dibuat Pada'}</strong>,
-      editable: true,
-      valueFormatter: (item) => convertTime(item.value)
+      renderHeader: () => <strong>{'CREATED AT'}</strong>,
+      editable: true
     },
     {
       field: 'actions',
@@ -95,9 +94,22 @@ export default function ListNotificationView() {
       getActions: ({ row }) => {
         return [
           <GridActionsCellItem
+            icon={<EditIcon />}
+            label='Edit'
+            className='textPrimary'
+            onClick={() => navigation('/users/edit/' + row.userId)}
+            color='inherit'
+          />,
+          <GridActionsCellItem
             icon={<DeleteIcon color='error' />}
             label='Delete'
             onClick={() => handleOpenModalDelete(row)}
+            color='inherit'
+          />,
+          <GridActionsCellItem
+            icon={<MoreOutlined color='info' />}
+            label='Detail'
+            onClick={() => navigation('/users/detail/' + row.userId)}
             color='inherit'
           />
         ]
@@ -106,34 +118,43 @@ export default function ListNotificationView() {
   ]
 
   function CustomToolbar() {
+    const [search, setSearch] = useState<string>('')
+
     return (
       <GridToolbarContainer sx={{ justifyContent: 'space-between', mb: 2 }}>
         <Stack direction='row' spacing={2}>
+          <GridToolbarExport />
           <Button
-            onClick={() => navigation('create')}
             startIcon={<Add />}
             variant='outlined'
+            onClick={() => navigation('/users/create')}
           >
-            Buat Notifikasi
+            Create user
           </Button>
         </Stack>
-        <TextField
-          size='small'
-          placeholder='search...'
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <Stack direction={'row'} spacing={1} alignItems={'center'}>
+          <TextField
+            size='small'
+            placeholder='search...'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button variant='outlined' onClick={() => getTableData({ search })}>
+            Search
+          </Button>
+        </Stack>
       </GridToolbarContainer>
     )
   }
 
   return (
-    <>
+    <Box>
       <BreadCrumberStyle
         navigation={[
           {
-            label: 'Notification',
-            link: '/notifications',
-            icon: <IconMenus.notification fontSize='small' />
+            label: 'Users',
+            link: '/users',
+            icon: <IconMenus.users fontSize='small' />
           }
         ]}
       />
@@ -164,18 +185,16 @@ export default function ListNotificationView() {
           }}
         />
       </Box>
-      <Modal
+
+      <ModalStyle
         openModal={openModalDelete}
         handleModalOnCancel={() => setOpenModalDelete(false)}
-        message={
-          'Apakah anda yakin ingin menghapus history notifikasi ' +
-          modalDeleteData?.notificationName
-        }
+        message={'Apakah anda yakin ingin menghapus ' + modalDeleteData?.userName}
         handleModal={() => {
-          handleDeleteNotification(modalDeleteData?.notificationId ?? '')
+          handleDeleteAdmin(modalDeleteData?.userId ?? '')
           setOpenModalDelete(!openModalDelete)
         }}
       />
-    </>
+    </Box>
   )
 }

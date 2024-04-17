@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Button, Card, Typography, Container, Box, TextField } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { Button, Card, Typography, Container, Box, TextField, Stack } from '@mui/material'
+import { Link, useNavigate } from 'react-router-dom'
 import { useHttp } from '../../hooks/http'
 import { useToken } from '../../hooks/token'
 import { IUserLoginRequestModel } from '../../models/userModel'
@@ -10,18 +10,18 @@ const LoginView = () => {
   const { setToken } = useToken()
   const navigate = useNavigate()
 
-  const [userName, setUserName] = useState('')
+  const [userEmail, setUserEmail] = useState('')
   const [userPassword, setUserPassword] = useState('')
 
   const handleSubmit = async () => {
     try {
       const payload: IUserLoginRequestModel = {
-        userName,
+        userEmail,
         userPassword
       }
 
       const result = await handlePostRequest({
-        path: '/my-profile/login',
+        path: '/users/login',
         body: payload
       })
 
@@ -61,13 +61,13 @@ const LoginView = () => {
             }}
           >
             <TextField
-              label='Username'
+              label='E-mail'
               id='outlined-start-adornment'
               sx={{ m: 1, width: '36ch' }}
-              value={userName}
+              value={userEmail}
               type='email'
               onChange={(e) => {
-                setUserName(e.target.value)
+                setUserEmail(e.target.value)
               }}
             />
 
@@ -95,6 +95,12 @@ const LoginView = () => {
               Login
             </Button>
           </Box>
+          <Stack direction='row' alignItems='center' mt={5}>
+            <Typography>Belum punya akun?</Typography>
+            <Link style={{ paddingLeft: '10px', textDecoration: 'none' }} to='sign-up'>
+              Sign Up
+            </Link>
+          </Stack>
         </Card>
       </Container>
     </>

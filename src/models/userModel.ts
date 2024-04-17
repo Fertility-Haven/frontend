@@ -5,9 +5,8 @@ export interface IUserModel extends IRootModel {
   userName: string
   userEmail: string
   userPassword: string
-  userPhoneNumber: string
   userPhoto: string
-  userRole: 'user' | 'admin' | 'superAdmin'
+  userRole: 'patient' | 'therapist' | 'admin'
 }
 
 export interface IUserUpdateRequestModel {
@@ -15,21 +14,19 @@ export interface IUserUpdateRequestModel {
   userName?: string
   userEmail?: string
   userPassword?: string
-  userPhoneNumber?: string
   userPhoto?: string
-  userRole?: 'user' | 'admin' | 'superAdmin' | string
+  userRole?: 'patient' | 'therapist' | 'admin' | string
 }
 
 export interface IUserCreateRequestModel {
   userName: string
   userEmail: string
   userPassword: string
-  userPhoneNumber: string
-  userPhoto: string
-  userRole: 'user' | 'admin' | 'superAdmin' | string
+  userPhoto?: string
+  userRole: 'patient' | 'therapist' | 'admin' | string
 }
 
 export interface IUserLoginRequestModel {
-  userName: string
+  userEmail: string
   userPassword: string
 }
