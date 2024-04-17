@@ -5,7 +5,8 @@ import {
   DataGrid,
   GridColDef,
   GridActionsCellItem,
-  GridToolbarContainer
+  GridToolbarContainer,
+  GridToolbarExport
 } from '@mui/x-data-grid'
 import { Add } from '@mui/icons-material'
 import { useEffect, useState } from 'react'
@@ -18,10 +19,16 @@ import { convertTime } from '../../utilities/convertTime'
 import { INotificationModel } from '../../models/notificationsModel'
 import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import Modal from '../../components/modal'
+import { useToken } from '../../hooks/token'
+import { jwtDecode } from 'jwt-decode'
+import { IUserModel } from '../../models/userModel'
 
-export default function NotificationView() {
+export default function ListNotificationView() {
   const navigation = useNavigate()
-  const [search, setSearch] = useState<string>('')
+  const { getToken } = useToken()
+  const token = getToken()
+  const user: IUserModel = jwtDecode(token ?? '')
+
   const [tableData, setTableData] = useState<GridRowsProp[]>([])
   const { handleGetTableDataRequest, handleRemoveRequest } = useHttp()
 
@@ -45,7 +52,7 @@ export default function NotificationView() {
     setOpenModalDelete(!openModalDelete)
   }
 
-  const getTableData = async () => {
+  const getTableData = async ({ search }: { search: string }) => {
     try {
       const result = await handleGetTableDataRequest({
         path: '/notifications',
@@ -63,7 +70,7 @@ export default function NotificationView() {
   }
 
   useEffect(() => {
-    getTableData()
+    getTableData({ search: '' })
   }, [paginationModel])
 
   const columns: GridColDef[] = [
@@ -82,11 +89,14 @@ export default function NotificationView() {
     {
       field: 'createdAt',
       flex: 1,
-      renderHeader: () => <strong>{'Dibuat Pada'}</strong>,
+      renderHeader: () => <strong>{'Created At'}</strong>,
       editable: true,
       valueFormatter: (item) => convertTime(item.value)
-    },
-    {
+    }
+  ]
+
+  if (user.userRole === 'admin') {
+    columns.push({
       field: 'actions',
       type: 'actions',
       renderHeader: () => <strong>{'ACTION'}</strong>,
@@ -102,26 +112,36 @@ export default function NotificationView() {
           />
         ]
       }
-    }
-  ]
+    })
+  }
 
   function CustomToolbar() {
+    const [search, setSearch] = useState<string>('')
     return (
       <GridToolbarContainer sx={{ justifyContent: 'space-between', mb: 2 }}>
         <Stack direction='row' spacing={2}>
-          <Button
-            onClick={() => navigation('create')}
-            startIcon={<Add />}
-            variant='outlined'
-          >
-            Buat Notifikasi
+          <GridToolbarExport />
+          {user.userRole === 'admin' && (
+            <Button
+              onClick={() => navigation('create')}
+              startIcon={<Add />}
+              variant='outlined'
+            >
+              Create Notification
+            </Button>
+          )}
+        </Stack>
+        <Stack direction={'row'} spacing={1} alignItems={'center'}>
+          <TextField
+            size='small'
+            placeholder='search...'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button variant='outlined' onClick={() => getTableData({ search })}>
+            Search
           </Button>
         </Stack>
-        <TextField
-          size='small'
-          placeholder='search...'
-          onChange={(e) => setSearch(e.target.value)}
-        />
       </GridToolbarContainer>
     )
   }

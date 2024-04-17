@@ -69,7 +69,7 @@ export default function CreateUserView() {
         }}
       >
         <Typography variant='h4' marginBottom={5} color='primary' fontWeight={'bold'}>
-          Create Admin
+          Create User
         </Typography>
         <Box
           component='form'

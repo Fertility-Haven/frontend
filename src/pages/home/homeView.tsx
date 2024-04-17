@@ -5,11 +5,18 @@ import { IconMenus } from '../../components/icon'
 import { useHttp } from '../../hooks/http'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { IStatisticTotalModel } from '../../models/statisticModel'
+import { useToken } from '../../hooks/token'
+import { jwtDecode } from 'jwt-decode'
+import { IUserModel } from '../../models/userModel'
 
 export default function HomeView() {
   const { handleGetRequest } = useHttp()
   const [quote, setQuote] = useState('')
   const navigation = useNavigate()
+  const { getToken } = useToken()
+  const token = getToken()
+  const user: IUserModel = jwtDecode(token ?? '')
 
   const getQuotes = async () => {
     const result = await handleGetRequest({
@@ -18,21 +25,22 @@ export default function HomeView() {
 
     if (result) {
       const randomIndex = Math.floor(Math.random() * 10)
-      setQuote(result.items[randomIndex ?? 0]?.quotesText)
+      setQuote(result.items[randomIndex ?? 0]?.quoteText)
     }
   }
 
-  //   const [statisticTotal, setStatisticTotal] = useState<IStatisticTotalModel>()
+  const [statisticTotal, setStatisticTotal] = useState<IStatisticTotalModel>()
 
-  //   const getStatistic = async () => {
-  //     const result: IStatisticTotalModel = await handleGetRequest({
-  //       path: '/statistic/total'
-  //     })
-  //     console.log(result)
-  //     setStatisticTotal(result)
-  //   }
+  const getStatistic = async () => {
+    const result: IStatisticTotalModel = await handleGetRequest({
+      path: '/statistic/total'
+    })
+    console.log(result)
+    setStatisticTotal(result)
+  }
 
   useEffect(() => {
+    getStatistic()
     getQuotes()
   }, [])
 
@@ -60,37 +68,97 @@ export default function HomeView() {
       </Card>
 
       <Grid container spacing={2} mb={2}>
-        <Grid item sm={4} xs={12}>
-          <Card
-            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
-            onClick={() => navigation('/my-journey/daily-moods')}
-          >
-            <Stack direction='row' spacing={2}>
-              <IconMenus.dailyMood fontSize='large' color={'inherit'} />
-              <Stack justifyContent='center'>
-                <Typography fontSize='large' fontWeight='bold'>
-                  Your Previous Mood Is Sad
-                </Typography>
-              </Stack>
-            </Stack>
-          </Card>
-        </Grid>
+        {user.userRole === 'patient' && (
+          <>
+            <Grid item sm={4} xs={12}>
+              <Card
+                sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
+                onClick={() => navigation('/my-journey/daily-moods')}
+              >
+                <Stack direction='row' spacing={2}>
+                  <IconMenus.dailyMood fontSize='large' color={'inherit'} />
+                  <Stack justifyContent='center'>
+                    <Typography fontSize='large' fontWeight='bold'>
+                      {statisticTotal?.totalDailyMood} Your Mood
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+            </Grid>
 
-        <Grid item sm={4} xs={12}>
-          <Card
-            sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
-            onClick={() => navigation('/my-journey/daily-journals')}
-          >
-            <Stack direction='row' spacing={2}>
-              <IconMenus.dailyJournal fontSize='large' color={'inherit'} />
-              <Stack justifyContent='center'>
-                <Typography fontSize='large' fontWeight='bold'>
-                  {30} Daily Journal
-                </Typography>
-              </Stack>
-            </Stack>
-          </Card>
-        </Grid>
+            <Grid item sm={4} xs={12}>
+              <Card
+                sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
+                onClick={() => navigation('/my-journey/daily-journals')}
+              >
+                <Stack direction='row' spacing={2}>
+                  <IconMenus.dailyJournal fontSize='large' color={'inherit'} />
+                  <Stack justifyContent='center'>
+                    <Typography fontSize='large' fontWeight='bold'>
+                      {statisticTotal?.totalDailyJournal} Daily Journal
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+            </Grid>
+          </>
+        )}
+
+        {user.userRole === 'admin' && (
+          <>
+            <Grid item sm={4} xs={12}>
+              <Card sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}>
+                <Stack direction='row' spacing={2}>
+                  <IconMenus.users fontSize='large' color={'inherit'} />
+                  <Stack justifyContent='center'>
+                    <Typography fontSize='large' fontWeight='bold'>
+                      {statisticTotal?.totalPatient} Patient
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+            </Grid>
+            <Grid item sm={4} xs={12}>
+              <Card sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}>
+                <Stack direction='row' spacing={2}>
+                  <IconMenus.users fontSize='large' color={'inherit'} />
+                  <Stack justifyContent='center'>
+                    <Typography fontSize='large' fontWeight='bold'>
+                      {statisticTotal?.totalTherapist} Therapiest
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+            </Grid>
+            <Grid item sm={4} xs={12}>
+              <Card sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}>
+                <Stack direction='row' spacing={2}>
+                  <IconMenus.users fontSize='large' color={'inherit'} />
+                  <Stack justifyContent='center'>
+                    <Typography fontSize='large' fontWeight='bold'>
+                      {statisticTotal?.totalAdmin} Admin
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+            </Grid>
+            <Grid item sm={4} xs={12}>
+              <Card
+                sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}
+                onClick={() => navigation('/quotes')}
+              >
+                <Stack direction='row' spacing={2}>
+                  <IconMenus.inspirationQuote fontSize='large' color={'inherit'} />
+                  <Stack justifyContent='center'>
+                    <Typography fontSize='large' fontWeight='bold'>
+                      {statisticTotal?.totalAdmin} Quotes
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+            </Grid>
+          </>
+        )}
 
         <Grid item sm={4} xs={12}>
           <Card
@@ -101,7 +169,7 @@ export default function HomeView() {
               <IconMenus.notification fontSize='large' color={'inherit'} />
               <Stack justifyContent='center'>
                 <Typography fontSize='large' fontWeight='bold'>
-                  {30} Notifications
+                  {statisticTotal?.totalNotification} Notifications
                 </Typography>
               </Stack>
             </Stack>
@@ -166,7 +234,16 @@ export default function HomeView() {
                     width: 380,
                     type: 'pie'
                   },
-                  labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+                  labels: [
+                    'Angry',
+                    'Happy',
+                    'Sad',
+                    'Afraid',
+                    'Anxious',
+                    'Confused',
+                    'Relaxed',
+                    'Disappointed'
+                  ],
                   responsive: [
                     {
                       breakpoint: 480,
@@ -181,7 +258,7 @@ export default function HomeView() {
                     }
                   ]
                 }}
-                series={[44, 55, 13, 43, 22]}
+                series={[44, 55, 13, 43, 22, 33, 33, 55, 23]}
                 type='pie'
                 width={380}
               />

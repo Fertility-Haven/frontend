@@ -8,7 +8,6 @@ import ProfileView from '../pages/profile/profileView'
 import EditProfileView from '../pages/profile/editProfileView'
 import MyJourneyView from '../pages/myJourney/myJourneyView'
 import SelfCareView from '../pages/selfCare/selfCareView'
-import NotificationView from '../pages/notification/notificationView'
 import CoupleExerciseView from '../pages/myJourney/coupleExercise/coupleExerciseView'
 import MeditationView from '../pages/myJourney/meditation/meditationView'
 import ListDailyJournalView from '../pages/myJourney/dailyJournal/listDailyJournalView'
@@ -24,6 +23,10 @@ import ListUserView from '../pages/users/listUserView'
 import DetailUserView from '../pages/users/detailUserView'
 import EditUserView from '../pages/users/editUserView'
 import CreateUserView from '../pages/users/createUser'
+import ListNotificationView from '../pages/notification/listNotificationView'
+import CreateNotificationView from '../pages/notification/createNotificatonView'
+import ListQuotesView from '../pages/quotes/listNotificationView'
+import CreateQuotesView from '../pages/quotes/createNotificatonView'
 
 export default function AppRouters() {
   const routers: { path: string; element: JSX.Element }[] = []
@@ -113,6 +116,15 @@ export default function AppRouters() {
       element: <EditUserView />
     },
 
+    //quotes routes
+    {
+      path: '/quotes',
+      element: <ListQuotesView />
+    },
+    {
+      path: '/quotes/create',
+      element: <CreateQuotesView />
+    },
     //self care routes
     {
       path: '/self-cares',
@@ -121,8 +133,13 @@ export default function AppRouters() {
 
     {
       path: '/notifications',
-      element: <NotificationView />
+      element: <ListNotificationView />
     },
+    {
+      path: '/notifications/create',
+      element: <CreateNotificationView />
+    },
+
     {
       path: '/my-profile',
       element: <ProfileView />

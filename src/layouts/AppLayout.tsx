@@ -130,7 +130,8 @@ export default function AppLayout() {
 
   const adminMenus = [
     { title: 'users', link: '/users', icon: <IconMenus.users /> },
-    { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> }
+    { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> },
+    { title: 'Quotes', link: '/quotes', icon: <IconMenus.inspirationQuote /> }
   ]
 
   const token = getToken()
