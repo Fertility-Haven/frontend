@@ -35,6 +35,8 @@ import {
 import { useAppContext } from '../context/app.context'
 import { IconMenus } from '../components/icon'
 import { useToken } from '../hooks/token'
+import { jwtDecode } from 'jwt-decode'
+import { IUserModel } from '../models/userModel'
 
 const drawerWidth = 240
 
@@ -110,16 +112,51 @@ export default function AppLayout() {
   const theme = useTheme()
   const [openDrawer, setOpenDrawer] = useState(true)
   const { appAlert, setAppAlert, isLoading, setIsLoading } = useAppContext()
-  const { removeToken } = useToken()
+  const { removeToken, getToken } = useToken()
   const navigate = useNavigate()
 
-  const menuItems = [
-    { title: 'Home', link: '/', icon: <IconMenus.home /> },
+  const menuItems = [{ title: 'Home', link: '/', icon: <IconMenus.home /> }]
+
+  const patientMenus = [
     { title: 'My Journey', link: '/my-journey', icon: <IconMenus.myJourney /> },
     { title: 'Virtual Therapy', link: '/virtual-therapy', icon: <IconMenus.therapy /> },
-    { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> },
-    { title: 'My Profile', link: '/my-profile', icon: <IconMenus.profile /> }
+    { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> }
   ]
+
+  const therapistMenus = [
+    { title: 'My Patient', link: '/virtual-therapy', icon: <IconMenus.therapy /> },
+    { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> }
+  ]
+
+  const adminMenus = [
+    { title: 'users', link: '/users', icon: <IconMenus.users /> },
+    { title: 'Notification', link: '/notifications', icon: <IconMenus.notification /> }
+  ]
+
+  const token = getToken()
+
+  if (token !== null) {
+    const resultToken: IUserModel = jwtDecode(token)
+    switch (resultToken.userRole) {
+      case 'patient':
+        menuItems.push(...patientMenus)
+        break
+      case 'therapist':
+        menuItems.push(...therapistMenus)
+        break
+      case 'admin':
+        menuItems.push(...adminMenus)
+        break
+      default:
+        break
+    }
+
+    menuItems.push({
+      title: 'My Profile',
+      link: '/my-profile',
+      icon: <IconMenus.profile />
+    })
+  }
 
   const handleDrawer = () => {
     setOpenDrawer(!openDrawer)

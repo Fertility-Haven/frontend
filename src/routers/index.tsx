@@ -20,6 +20,10 @@ import ListDailyMoodView from '../pages/myJourney/dailyMood/listDailyMoodView'
 import CreateDailyMoodView from '../pages/myJourney/dailyMood/createDailyMoodView'
 import HomeView from '../pages/home/homeView'
 import ListVirtualTherapyView from '../pages/virtualTherapy/listVirtualTherapyView'
+import ListUserView from '../pages/users/listUserView'
+import DetailUserView from '../pages/users/detailUserView'
+import EditUserView from '../pages/users/editUserView'
+import CreateUserView from '../pages/users/createUser'
 
 export default function AppRouters() {
   const routers: { path: string; element: JSX.Element }[] = []
@@ -90,6 +94,26 @@ export default function AppRouters() {
       path: '/virtual-therapy',
       element: <ListVirtualTherapyView />
     },
+
+    //users routes
+    {
+      path: '/users',
+      element: <ListUserView />
+    },
+    {
+      path: '/users/create',
+      element: <CreateUserView />
+    },
+    {
+      path: '/users/detail/:userId',
+      element: <DetailUserView />
+    },
+    {
+      path: '/users/edit/:userId',
+      element: <EditUserView />
+    },
+
+    //self care routes
     {
       path: '/self-cares',
       element: <SelfCareView />

@@ -15,6 +15,7 @@ import ChurchIcon from '@mui/icons-material/Church'
 import Diversity3Icon from '@mui/icons-material/Diversity3'
 import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined'
 import SpaIcon from '@mui/icons-material/Spa'
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline'
 
 export const IconMenus = {
   logo: SpaIcon,
@@ -35,5 +36,6 @@ export const IconMenus = {
   prayer: ChurchIcon,
   community: Diversity3Icon,
   yoga: SelfImprovementOutlinedIcon,
-  therapy: SpaOutlinedIcon
+  therapy: SpaOutlinedIcon,
+  users: PeopleOutlineIcon
 }

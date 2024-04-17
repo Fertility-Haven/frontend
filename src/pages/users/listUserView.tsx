@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Box from '@mui/material/Box'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/DeleteOutlined'
 import {
   GridRowsProp,
   DataGrid,
@@ -8,18 +10,22 @@ import {
   GridToolbarContainer,
   GridToolbarExport
 } from '@mui/x-data-grid'
-import { MoreOutlined } from '@mui/icons-material'
+import { Add, MoreOutlined } from '@mui/icons-material'
 import { useEffect, useState } from 'react'
 import { useHttp } from '../../hooks/http'
 import { Button, Stack, TextField } from '@mui/material'
 import BreadCrumberStyle from '../../components/breadcrumb/Index'
 import { IconMenus } from '../../components/icon'
 import { useNavigate } from 'react-router-dom'
+import ModalStyle from '../../components/modal'
+import { IUserModel } from '../../models/userModel'
 
-export default function ListVirtualTherapyView() {
-  const navigation = useNavigate()
+export default function ListUserView() {
   const [tableData, setTableData] = useState<GridRowsProp[]>([])
-  const { handleGetTableDataRequest } = useHttp()
+  const { handleGetTableDataRequest, handleRemoveRequest } = useHttp()
+  const navigation = useNavigate()
+  const [modalDeleteData, setModalDeleteData] = useState<IUserModel>()
+  const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
 
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 25,
@@ -34,13 +40,25 @@ export default function ListVirtualTherapyView() {
         size: paginationModel.pageSize ?? 10,
         filter: { search }
       })
+
       if (result) {
-        console.log(result)
         setTableData(result.items)
       }
     } catch (error: any) {
       console.log(error)
     }
+  }
+
+  const handleDeleteAdmin = async (userId: string) => {
+    await handleRemoveRequest({
+      path: '/users?userId=' + userId
+    })
+    window.location.reload()
+  }
+
+  const handleOpenModalDelete = (data: IUserModel) => {
+    setModalDeleteData(data)
+    setOpenModalDelete(!openModalDelete)
   }
 
   useEffect(() => {
@@ -51,19 +69,20 @@ export default function ListVirtualTherapyView() {
     {
       field: 'userName',
       flex: 1,
-      renderHeader: () => <strong>{'Name'}</strong>,
+      renderHeader: () => <strong>{'NAMA'}</strong>,
       editable: true
     },
     {
       field: 'userRole',
-      flex: 1,
       renderHeader: () => <strong>{'Role'}</strong>,
-      editable: true
+      flex: 1,
+      editable: true,
+      type: 'singleSelect',
+      valueOptions: ['patient', 'therapist', 'admin']
     },
     {
-      field: 'userEmail',
-      flex: 1,
-      renderHeader: () => <strong>{'E-mail'}</strong>,
+      field: 'createdAt',
+      renderHeader: () => <strong>{'CREATED AT'}</strong>,
       editable: true
     },
     {
@@ -75,9 +94,22 @@ export default function ListVirtualTherapyView() {
       getActions: ({ row }) => {
         return [
           <GridActionsCellItem
+            icon={<EditIcon />}
+            label='Edit'
+            className='textPrimary'
+            onClick={() => navigation('/users/edit/' + row.userId)}
+            color='inherit'
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon color='error' />}
+            label='Delete'
+            onClick={() => handleOpenModalDelete(row)}
+            color='inherit'
+          />,
+          <GridActionsCellItem
             icon={<MoreOutlined color='info' />}
             label='Detail'
-            onClick={() => navigation('detail/' + row.dailyJournalId)}
+            onClick={() => navigation('/users/detail/' + row.userId)}
             color='inherit'
           />
         ]
@@ -87,10 +119,18 @@ export default function ListVirtualTherapyView() {
 
   function CustomToolbar() {
     const [search, setSearch] = useState<string>('')
+
     return (
       <GridToolbarContainer sx={{ justifyContent: 'space-between', mb: 2 }}>
         <Stack direction='row' spacing={2}>
           <GridToolbarExport />
+          <Button
+            startIcon={<Add />}
+            variant='outlined'
+            onClick={() => navigation('/users/create')}
+          >
+            Create user
+          </Button>
         </Stack>
         <Stack direction={'row'} spacing={1} alignItems={'center'}>
           <TextField
@@ -112,13 +152,12 @@ export default function ListVirtualTherapyView() {
       <BreadCrumberStyle
         navigation={[
           {
-            label: 'Virtual Therapy',
-            link: '/virtual-therapy',
-            icon: <IconMenus.therapy fontSize='small' />
+            label: 'Users',
+            link: '/users',
+            icon: <IconMenus.users fontSize='small' />
           }
         ]}
       />
-
       <Box
         sx={{
           width: '100%',
@@ -146,6 +185,16 @@ export default function ListVirtualTherapyView() {
           }}
         />
       </Box>
+
+      <ModalStyle
+        openModal={openModalDelete}
+        handleModalOnCancel={() => setOpenModalDelete(false)}
+        message={'Apakah anda yakin ingin menghapus ' + modalDeleteData?.userName}
+        handleModal={() => {
+          handleDeleteAdmin(modalDeleteData?.userId ?? '')
+          setOpenModalDelete(!openModalDelete)
+        }}
+      />
     </Box>
   )
 }
