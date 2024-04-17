@@ -104,6 +104,23 @@ export default function HomeView() {
           </>
         )}
 
+        {user.userRole === 'therapist' && (
+          <>
+            <Grid item sm={4} xs={12}>
+              <Card sx={{ p: 3, minWidth: 200, cursor: 'pointer' }}>
+                <Stack direction='row' spacing={2}>
+                  <IconMenus.users fontSize='large' color={'inherit'} />
+                  <Stack justifyContent='center'>
+                    <Typography fontSize='large' fontWeight='bold'>
+                      {statisticTotal?.totalPatient} My Patient
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+            </Grid>
+          </>
+        )}
+
         {user.userRole === 'admin' && (
           <>
             <Grid item sm={4} xs={12}>
@@ -212,11 +229,11 @@ export default function HomeView() {
               }}
               series={[
                 {
-                  name: 'series1',
+                  name: 'Good',
                   data: [31, 40, 28, 51, 42, 109, 100]
                 },
                 {
-                  name: 'series2',
+                  name: 'Bad',
                   data: [11, 32, 45, 32, 34, 52, 41]
                 }
               ]}

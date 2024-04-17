@@ -14,12 +14,20 @@ import { useHttp } from '../../hooks/http'
 import { Button, Stack, TextField } from '@mui/material'
 import BreadCrumberStyle from '../../components/breadcrumb/Index'
 import { IconMenus } from '../../components/icon'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode'
+import { useToken } from '../../hooks/token'
+import { IUserModel } from '../../models/userModel'
+import CallIcon from '@mui/icons-material/Call'
 
 export default function ListVirtualTherapyView() {
-  const navigation = useNavigate()
+  // const navigation = useNavigate()
   const [tableData, setTableData] = useState<GridRowsProp[]>([])
   const { handleGetTableDataRequest } = useHttp()
+
+  const { getToken } = useToken()
+  const token = getToken()
+  const user: IUserModel = jwtDecode(token ?? '')
 
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 25,
@@ -73,14 +81,28 @@ export default function ListVirtualTherapyView() {
       flex: 1,
       cellClassName: 'actions',
       getActions: ({ row }) => {
-        return [
+        const actionButtons = []
+
+        if (user.userRole === 'patient') {
+          actionButtons.push(
+            <GridActionsCellItem
+              icon={<CallIcon color='info' />}
+              label='Booking'
+              // onClick={() => navigation('detail/' + row.dailyJournalId)}
+              color='inherit'
+            />
+          )
+        }
+
+        actionButtons.push(
           <GridActionsCellItem
             icon={<MoreOutlined color='info' />}
             label='Detail'
-            onClick={() => navigation('detail/' + row.dailyJournalId)}
+            // onClick={() => navigation('detail/' + row.dailyJournalId)}
             color='inherit'
           />
-        ]
+        )
+        return actionButtons
       }
     }
   ]
